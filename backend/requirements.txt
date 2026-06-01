@@ -1,0 +1,26 @@
+# --- Web / API ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.4
+
+# --- БД ---
+SQLAlchemy==2.0.36
+psycopg2-binary==2.9.10
+
+# --- STT / диаризация ---
+faster-whisper==1.1.0
+pyannote.audio==3.3.2
+# torch ставится как зависимость pyannote; для CPU-сборки см. Dockerfile
+# huggingface_hub <1.0: в 1.x удалён аргумент use_auth_token, который
+# pyannote 3.3.2 всё ещё передаёт в hf_hub_download (иначе TypeError при загрузке).
+huggingface_hub<1.0
+# pyannote 3.3.2 импортирует matplotlib в своих task-модулях, но не объявляет
+# его как зависимость — без него ModuleNotFoundError при загрузке пайплайна.
+matplotlib==3.9.4
+
+# --- LLM ---
+anthropic==0.42.0
+
+# --- Тесты ---
+pytest==8.3.4

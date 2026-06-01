@@ -1,0 +1,19 @@
+# Секреты
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+backend/data/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Аудио/модели
+*.mp3
+*.wav
+*.m4a
+hf_cache/

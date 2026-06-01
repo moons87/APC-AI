@@ -1,0 +1,190 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "Unbounded",
+      "fontSize": "66px",
+      "fontWeight": "700",
+      "lineHeight": "67.32px",
+      "letterSpacing": "-1.98px",
+      "color": "#14161C",
+      "sampleText": "Целый урок —из одной темы"
+    },
+    {
+      "role": "heading",
+      "fontFamily": "Unbounded",
+      "fontSize": "44px",
+      "fontWeight": "700",
+      "lineHeight": "47.52px",
+      "letterSpacing": "-0.88px",
+      "color": "#FFFFFF",
+      "sampleText": "Соберите первый урок за 10 минут"
+    },
+    {
+      "role": "heading-2",
+      "fontFamily": "Unbounded",
+      "fontSize": "40px",
+      "fontWeight": "700",
+      "lineHeight": "44px",
+      "letterSpacing": "-0.8px",
+      "color": "#14161C",
+      "sampleText": "Шесть шагов от темы до готового урока"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Manrope",
+      "fontSize": "18px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "-0.36px",
+      "color": "#14161C",
+      "sampleText": "Тема"
+    },
+    {
+      "role": "body",
+      "fontFamily": "Manrope",
+      "fontSize": "17px",
+      "fontWeight": "400",
+      "lineHeight": "27.2px",
+      "letterSpacing": "normal",
+      "color": "#3A3F4D",
+      "sampleText": "Введите тему — и за 10 минут получите план, презентацию, обу"
+    },
+    {
+      "role": "label",
+      "fontFamily": "Manrope",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "color": "#14161C",
+      "sampleText": "Тема урокаЗако✦🗂️План урока🎞️Презентация🎬Видео🎧Подкаст"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      4,
+      6,
+      8,
+      9,
+      12,
+      14,
+      16,
+      18,
+      22,
+      24,
+      26,
+      28,
+      30,
+      36,
+      40
+    ],
+    "baseUnit": 4
+  },
+  "radius": [
+    "9px",
+    "12px"
+  ],
+  "shadows": [
+    {
+      "value": "rgba(20, 22, 28, 0.04) 0px 1px 2px 0px, rgba(20, 22, 28, 0.06) 0px 1px 3px 0px",
+      "count": 5
+    },
+    {
+      "value": "rgba(79, 70, 229, 0.3) 0px 8px 22px 0px",
+      "count": 3
+    },
+    {
+      "value": "rgba(6, 182, 212, 0.45) 0px 12px 40px 0px",
+      "count": 1
+    }
+  ],
+  "buttons": [
+    {
+      "label": "Запустить →Как это работает",
+      "background": "#000000",
+      "color": "#14161C",
+      "padding": "0px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(20, 22, 28)",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "52px"
+    },
+    {
+      "label": "Запустить →",
+      "background": "#000000",
+      "color": "#FFFFFF",
+      "padding": "14px 24px",
+      "borderRadius": "12px",
+      "border": "0px none rgb(255, 255, 255)",
+      "boxShadow": "rgba(79, 70, 229, 0.3) 0px 8px 22px 0px",
+      "fontSize": "15.5px",
+      "fontWeight": "700",
+      "height": "52px"
+    },
+    {
+      "label": "Как это работает",
+      "background": "#FFFFFF",
+      "color": "#14161C",
+      "padding": "14px 24px",
+      "borderRadius": "12px",
+      "border": "1px solid rgb(215, 218, 229)",
+      "boxShadow": "rgba(20, 22, 28, 0.04) 0px 1px 2px 0px, rgba(20, 22, 28, 0.06) 0px 1px 3px 0px",
+      "fontSize": "15.5px",
+      "fontWeight": "700",
+      "height": "52px"
+    },
+    {
+      "label": "Запустить платформу →",
+      "background": "#000000",
+      "color": "#FFFFFF",
+      "padding": "17px 34px",
+      "borderRadius": "14px",
+      "border": "0px none rgb(255, 255, 255)",
+      "boxShadow": "rgba(6, 182, 212, 0.45) 0px 12px 40px 0px",
+      "fontSize": "17px",
+      "fontWeight": "700",
+      "height": "57px"
+    }
+  ],
+  "cards": [
+    {
+      "label": "card",
+      "background": "#000000",
+      "color": "#14161C",
+      "padding": "0px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(20, 22, 28)",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "197px"
+    },
+    {
+      "label": "card",
+      "background": "#FFFFFF",
+      "color": "#14161C",
+      "padding": "22px",
+      "borderRadius": "20px",
+      "border": "1px solid rgb(231, 233, 240)",
+      "boxShadow": "rgba(20, 22, 28, 0.04) 0px 1px 2px 0px, rgba(20, 22, 28, 0.06) 0px 1px 3px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "197px"
+    }
+  ],
+  "nav": {
+    "label": "navigation",
+    "background": "#000000",
+    "color": "#14161C",
+    "padding": "22px 28px",
+    "borderRadius": "0px",
+    "border": "0px none rgb(20, 22, 28)",
+    "boxShadow": "none",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "height": "81px"
+  }
+}

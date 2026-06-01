@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(cd \"C:\\\\Users\\\\Arlan Alimbay\\\\Documents\\\\конкурс\"; docker compose -p lesson-observer run --rm -v \"${PWD}/backend:/app\" -w /app backend pytest app/tests/test_uploads.py -v 2>&1)"
+    ]
+  }
+}

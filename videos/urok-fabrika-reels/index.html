@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="root"
+      data-width="1080"
+      data-height="1920"
+      data-start="0"
+      data-duration="30"
+    >
+      <style>
+        @font-face { font-family: "Manrope"; font-weight: 500; src: url("fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk7PFO_F.ttf") format("truetype"); }
+        @font-face { font-family: "Manrope"; font-weight: 600; src: url("fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4jE-_F.ttf") format("truetype"); }
+        @font-face { font-family: "Manrope"; font-weight: 700; src: url("fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4aE-_F.ttf") format("truetype"); }
+        @font-face { font-family: "Manrope"; font-weight: 800; src: url("fonts/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk59E-_F.ttf") format("truetype"); }
+        @font-face { font-family: "Unbounded"; font-weight: 600; src: url("fonts/Yq6F-LOTXCb04q32xlpat-6uR42XTqtG68b2040.ttf") format("truetype"); }
+        @font-face { font-family: "Unbounded"; font-weight: 700; src: url("fonts/Yq6F-LOTXCb04q32xlpat-6uR42XTqtG6__2040.ttf") format("truetype"); }
+        @font-face { font-family: "Unbounded"; font-weight: 800; src: url("fonts/Yq6F-LOTXCb04q32xlpat-6uR42XTqtG65j2040.ttf") format("truetype"); }
+
+        #root {
+          position: relative; width: 1080px; height: 1920px; overflow: hidden;
+          font-family: "Manrope", sans-serif; color: #fff;
+          background:
+            radial-gradient(900px 900px at 28% 12%, rgba(6,182,212,0.18), transparent 60%),
+            radial-gradient(900px 1000px at 80% 92%, rgba(139,92,246,0.22), transparent 60%),
+            #07090f;
+          --grad: linear-gradient(120deg, #22d3ee 0%, #818cf8 52%, #c084fc 100%);
+          --disp: "Unbounded", sans-serif;
+        }
+        #root #fx { position: absolute; inset: 0; width: 1080px; height: 1920px; display: block; z-index: 0; }
+        #root .grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.5;
+          background: radial-gradient(1200px 800px at 50% 40%, transparent 55%, rgba(0,0,0,0.45)); }
+
+        #root .scene {
+          position: absolute; inset: 0; z-index: 2; opacity: 0;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          padding: 120px 90px; box-sizing: border-box; text-align: center;
+        }
+        #root .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        #root .disp { font-family: "Unbounded", sans-serif; letter-spacing: -0.03em; }
+
+        #root .glass {
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.16);
+          border-radius: 34px;
+          backdrop-filter: blur(22px) saturate(155%);
+          -webkit-backdrop-filter: blur(22px) saturate(155%);
+          box-shadow: 0 40px 90px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.28);
+        }
+
+        /* S1 hook */
+        #root #s1 .badge { font-weight: 700; font-size: 30px; letter-spacing: 0.16em; text-transform: uppercase; color: #a5b4fc; padding: 16px 30px; }
+        #root #s1 h1 { margin: 40px 0 0; font-weight: 800; font-size: 132px; line-height: 1.02; }
+
+        /* S2 input */
+        #root #s2 .card { width: 880px; padding: 56px; position: relative; }
+        #root #s2 .lab { font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #b9c0d4; font-size: 28px; text-align: left; }
+        #root #s2 .typed { font-weight: 800; font-size: 78px; margin-top: 18px; text-align: left; min-height: 96px; }
+        #root #s2 .caret { display: inline-block; width: 6px; height: 0.92em; background: #67e8f9; margin-left: 8px; vertical-align: -8px; }
+        #root #s2 .spark { position: absolute; top: -34px; right: -34px; width: 88px; height: 88px; border-radius: 50%;
+          display: grid; place-items: center; font-size: 38px; color: #fff;
+          background: linear-gradient(135deg,#22d3ee,#c084fc); box-shadow: 0 18px 50px rgba(34,211,238,0.6); }
+        #root #s2 .go { margin-top: 56px; font-weight: 700; font-size: 46px; }
+
+        /* S3 pipeline (vertical) */
+        #root #s3 .title { font-weight: 800; font-size: 64px; margin-bottom: 56px; }
+        #root #s3 .pipe { position: relative; width: 760px; display: flex; flex-direction: column; gap: 22px; }
+        #root #s3 .vline { position: absolute; left: 78px; top: 30px; bottom: 30px; width: 5px; border-radius: 3px; background: var(--grad); opacity: 0.8; transform-origin: top; }
+        #root #s3 .chip { display: flex; align-items: center; gap: 28px; padding: 26px 34px; text-align: left; }
+        #root #s3 .chip .ic { width: 76px; height: 76px; flex: 0 0 auto; border-radius: 22px; display: grid; place-items: center; font-size: 38px;
+          background: linear-gradient(135deg, rgba(34,211,238,0.25), rgba(192,132,252,0.28)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); }
+        #root #s3 .chip .t { font-weight: 800; font-size: 42px; }
+        #root #s3 .counter { position: absolute; top: 150px; right: 96px; font-weight: 800; font-size: 52px; }
+
+        /* S4 outputs (2x2) */
+        #root #s4 .h { font-weight: 800; font-size: 92px; margin-bottom: 50px; }
+        #root #s4 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; width: 880px; }
+        #root #s4 .oc { padding: 40px; text-align: left; }
+        #root #s4 .oc .ic { font-size: 70px; }
+        #root #s4 .oc .t { font-weight: 800; font-size: 44px; margin: 22px 0 22px; }
+        #root #s4 .oc .bar { height: 11px; border-radius: 999px; background: rgba(255,255,255,0.14); overflow: hidden; }
+        #root #s4 .oc .bar i { display: block; height: 100%; width: 100%; border-radius: 999px; background: var(--grad); transform-origin: left; }
+        #root #s4 .bonus { margin-top: 44px; display: inline-flex; align-items: center; gap: 16px; font-weight: 800; font-size: 40px; padding: 24px 40px; }
+
+        /* S5 CTA */
+        #root #s5 h2 { font-weight: 800; font-size: 116px; line-height: 1.04; margin: 0; }
+        #root #s5 .btn { display: inline-flex; align-items: center; gap: 18px; margin-top: 60px; padding: 36px 70px; border-radius: 26px;
+          font-weight: 800; font-size: 50px; color: #fff; background: linear-gradient(135deg,#22d3ee,#818cf8,#c084fc);
+          box-shadow: 0 24px 70px rgba(129,140,248,0.6); }
+        #root #s5 .logo { margin-top: 56px; color: rgba(255,255,255,0.72); font-weight: 700; font-size: 38px; }
+      </style>
+
+      <canvas id="fx"></canvas>
+      <div class="grain"></div>
+
+      <!-- S1 -->
+      <section id="s1" class="scene">
+        <div class="glass badge disp" style="border-radius:999px">🎧 Урок·Фабрика</div>
+        <h1 class="disp">Целый урок<br />из одной <span class="grad">темы</span></h1>
+      </section>
+
+      <!-- S2 -->
+      <section id="s2" class="scene">
+        <div class="glass card">
+          <div class="spark">✦</div>
+          <div class="lab">Тема урока</div>
+          <div class="typed"><span id="s2-typed"></span><span class="caret" id="s2-caret"></span></div>
+        </div>
+        <div class="go grad disp">ИИ берётся за дело ↓</div>
+      </section>
+
+      <!-- S3 -->
+      <section id="s3" class="scene">
+        <div class="title disp">Из темы — весь комплект</div>
+        <div class="pipe">
+          <div class="vline" id="s3-vline"></div>
+          <div class="counter grad disp" id="s3-counter">0 мин</div>
+          <div class="glass chip"><span class="ic">🗂️</span><span class="t">План урока</span></div>
+          <div class="glass chip"><span class="ic">🔎</span><span class="t">Источники</span></div>
+          <div class="glass chip"><span class="ic">🎞️</span><span class="t">Презентация</span></div>
+          <div class="glass chip"><span class="ic">🎬</span><span class="t">Видео</span></div>
+          <div class="glass chip"><span class="ic">🎧</span><span class="t">Подкаст</span></div>
+        </div>
+      </section>
+
+      <!-- S4 -->
+      <section id="s4" class="scene">
+        <div class="h disp">Готово</div>
+        <div class="grid">
+          <div class="glass oc"><div class="ic">🗂️</div><div class="t">План</div><div class="bar"><i></i></div></div>
+          <div class="glass oc"><div class="ic">🎞️</div><div class="t">Презентация</div><div class="bar"><i></i></div></div>
+          <div class="glass oc"><div class="ic">🎬</div><div class="t">Видео</div><div class="bar"><i></i></div></div>
+          <div class="glass oc"><div class="ic">🎧</div><div class="t">Подкаст</div><div class="bar"><i></i></div></div>
+        </div>
+        <div class="glass bonus grad disp">📊 + анализ урока</div>
+      </section>
+
+      <!-- S5 -->
+      <section id="s5" class="scene">
+        <h2 class="disp">Соберите урок<br />за <span class="grad">10 минут</span></h2>
+        <div class="btn disp">Запустить →</div>
+        <div class="logo">🎧 Урок·Фабрика</div>
+      </section>
+
+      <!-- Three.js (UMD — инлайнится компилятором, работает офлайн) -->
+      <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+      <script>
+        (function () {
+          if (!window.THREE) return;
+          const canvas = document.getElementById("fx");
+          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+          renderer.setSize(1080, 1920, false);
+          renderer.setPixelRatio(1);
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(60, 1080 / 1920, 0.1, 100);
+          camera.position.set(0, 0, 16);
+
+          function mulberry32(a) {
+            return function () {
+              a |= 0; a = (a + 0x6d2b79f5) | 0;
+              let t = Math.imul(a ^ (a >>> 15), 1 | a);
+              t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+          }
+          const rand = mulberry32(20260601);
+          const N = 1100;
+          const pos = new Float32Array(N * 3);
+          const base = new Float32Array(N * 3);
+          const col = new Float32Array(N * 3);
+          const ph = new Float32Array(N);
+          const palette = [new THREE.Color(0x22d3ee), new THREE.Color(0x818cf8), new THREE.Color(0xc084fc)];
+          for (let i = 0; i < N; i++) {
+            const x = (rand() * 2 - 1) * 6.5;
+            const y = (rand() * 2 - 1) * 11.5;
+            const z = (rand() * 2 - 1) * 5;
+            base[i * 3] = x; base[i * 3 + 1] = y; base[i * 3 + 2] = z;
+            pos[i * 3] = x; pos[i * 3 + 1] = y; pos[i * 3 + 2] = z;
+            const c = palette[Math.floor(rand() * palette.length)];
+            col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+            ph[i] = rand() * Math.PI * 2;
+          }
+          const geo = new THREE.BufferGeometry();
+          geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+          geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+
+          function makeSprite() {
+            const c = document.createElement("canvas");
+            c.width = c.height = 64;
+            const g = c.getContext("2d");
+            const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+            grd.addColorStop(0, "rgba(255,255,255,1)");
+            grd.addColorStop(0.25, "rgba(255,255,255,0.55)");
+            grd.addColorStop(1, "rgba(255,255,255,0)");
+            g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(c);
+          }
+          const mat = new THREE.PointsMaterial({
+            size: 0.42, map: makeSprite(), vertexColors: true,
+            transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.95,
+          });
+          const points = new THREE.Points(geo, mat);
+          scene.add(points);
+          const arr = geo.getAttribute("position").array;
+
+          function renderAt(t) {
+            for (let i = 0; i < N; i++) {
+              const bx = base[i * 3], by = base[i * 3 + 1], bz = base[i * 3 + 2];
+              arr[i * 3] = bx + Math.sin(t * 0.28 + ph[i]) * 0.55;
+              arr[i * 3 + 1] = by + t * 0.18 + Math.cos(t * 0.22 + ph[i]) * 0.6;
+              arr[i * 3 + 2] = bz + Math.cos(t * 0.3 + ph[i]) * 0.5;
+            }
+            geo.getAttribute("position").needsUpdate = true;
+            points.rotation.z = Math.sin(t * 0.05) * 0.08;
+            camera.position.x = Math.sin(t * 0.12) * 0.9;
+            camera.position.y = Math.cos(t * 0.1) * 0.7;
+            camera.lookAt(0, 0, 0);
+            renderer.render(scene, camera);
+          }
+          window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+          renderAt(window.__hfThreeTime || 0);
+        })();
+      </script>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        ["s1","s2","s3","s4","s5"].forEach((id, i) => { document.getElementById(id).style.zIndex = i + 2; });
+
+        const W = { s1: [0.0, 4.6], s2: [4.7, 10.4], s3: [10.5, 19.4], s4: [19.5, 25.0], s5: [25.1, 30.0] };
+        Object.entries(W).forEach(([id, [tin, tout]]) => {
+          tl.to("#" + id, { opacity: 1, duration: 0.55, ease: "power2.out" }, tin);
+          if (id !== "s5") tl.to("#" + id, { opacity: 0, duration: 0.5, ease: "power2.in" }, tout);
+        });
+
+        // S1
+        tl.from("#s1 .badge", { y: 30, opacity: 0, scale: 0.9, duration: 0.6, ease: "back.out(1.6)" }, 0.3);
+        tl.from("#s1 h1", { y: 70, opacity: 0, scale: 0.96, duration: 0.9, ease: "expo.out" }, 0.55);
+
+        // S2 — печать темы
+        tl.from("#s2 .card", { y: 70, opacity: 0, scale: 0.94, duration: 0.7, ease: "power3.out" }, 4.9);
+        tl.from("#s2 .spark", { scale: 0, rotation: -120, opacity: 0, duration: 0.55, ease: "back.out(2)" }, 5.2);
+        const full = "Квадратные уравнения";
+        const tw = { p: 0 };
+        const te = document.getElementById("s2-typed");
+        tl.to(tw, { p: 1, duration: 1.8, ease: "none", onUpdate: () => { te.textContent = full.slice(0, Math.round(tw.p * full.length)); } }, 5.5);
+        tl.to("#s2-caret", { opacity: 0, duration: 0.32, ease: "steps(1)", repeat: 8, yoyo: true }, 5.5);
+        tl.from("#s2 .go", { y: 26, opacity: 0, duration: 0.55, ease: "power2.out" }, 7.9);
+        // плавающая карточка (конечные повторы)
+        tl.to("#s2 .card", { y: -16, duration: 2.6, ease: "sine.inOut", repeat: 1, yoyo: true }, 8.0);
+
+        // S3 — конвейер
+        tl.from("#s3 .title", { y: 36, opacity: 0, duration: 0.55, ease: "power3.out" }, 10.8);
+        tl.from("#s3 .vline", { scaleY: 0, opacity: 0, duration: 1.0, ease: "power2.out" }, 11.0);
+        tl.from("#s3 .chip", { x: -60, opacity: 0, scale: 0.95, duration: 0.55, ease: "back.out(1.4)", stagger: 0.32 }, 11.2);
+        const cnt = { v: 0 };
+        const ce = document.getElementById("s3-counter");
+        tl.to(cnt, { v: 10, duration: 2.0, ease: "power2.out", onUpdate: () => { ce.textContent = "≈" + Math.round(cnt.v) + " мин"; } }, 13.5);
+        // глубинный дрейф чипов
+        tl.to("#s3 .chip", { y: -14, duration: 2.8, ease: "sine.inOut", stagger: 0.18, repeat: 1, yoyo: true }, 14.2);
+
+        // S4 — результат
+        tl.from("#s4 .h", { y: 36, opacity: 0, duration: 0.55, ease: "power3.out" }, 19.8);
+        tl.from("#s4 .oc", { y: 70, opacity: 0, scale: 0.9, rotationZ: -3, duration: 0.6, ease: "back.out(1.5)", stagger: 0.16 }, 20.0);
+        tl.from("#s4 .oc .bar i", { scaleX: 0, duration: 0.7, ease: "power2.out", stagger: 0.16 }, 20.7);
+        tl.from("#s4 .bonus", { y: 30, opacity: 0, scale: 0.92, duration: 0.6, ease: "back.out(1.7)" }, 22.2);
+        tl.to("#s4 .oc", { y: -12, duration: 2.6, ease: "sine.inOut", stagger: 0.12, repeat: 1, yoyo: true }, 22.6);
+
+        // S5 — CTA
+        tl.from("#s5 h2", { y: 60, opacity: 0, scale: 0.95, duration: 0.85, ease: "expo.out" }, 25.4);
+        tl.from("#s5 .btn", { y: 34, opacity: 0, scale: 0.88, duration: 0.6, ease: "back.out(1.8)" }, 26.0);
+        tl.from("#s5 .logo", { opacity: 0, duration: 0.5, ease: "power2.out" }, 26.5);
+        tl.to("#s5 .btn", { scale: 1.06, duration: 0.55, ease: "sine.inOut", repeat: 4, yoyo: true }, 26.8);
+
+        window.__timelines["root"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
