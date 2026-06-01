@@ -37,7 +37,15 @@ from sqlalchemy.orm import Session
 from . import models
 from .analysis import analyze_transcript
 from .database import SessionLocal, get_db, init_db
-from .schemas import LessonDetail, LessonSummary, UploadResponse
+from .doc_extract import ALLOWED_PLAN_EXT, extract_text
+from .plan_check import check_plan
+from .schemas import (
+    LessonDetail,
+    LessonSummary,
+    PlanCheckListItem,
+    PlanCheckOut,
+    UploadResponse,
+)
 from .transcription import relabel_transcript, transcribe_and_diarize
 from .media import ensure_wav
 
@@ -240,6 +248,83 @@ def get_lesson(lesson_id: int, db: Session = Depends(get_db)):
     if lesson is None:
         raise HTTPException(404, "Урок не найден")
     return lesson
+
+
+# --------------------------------------------------------------------------- #
+# Методист РУП: проверка учебного плана (синхронно)
+# --------------------------------------------------------------------------- #
+@app.post("/plans/check", response_model=PlanCheckOut)
+async def check_plan_endpoint(
+    title: str = Form(...),
+    language: str = Form("ru"),
+    text: str = Form(""),
+    file: UploadFile | None = File(None),
+    db: Session = Depends(get_db),
+):
+    if language not in {"kk", "ru"}:
+        raise HTTPException(400, "language должен быть 'kk' или 'ru'")
+
+    source_filename = None
+    plan_text = (text or "").strip()
+
+    if file is not None and file.filename:
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in ALLOWED_PLAN_EXT:
+            raise HTTPException(
+                400,
+                f"Неподдерживаемый формат: {ext}. Разрешено: {sorted(ALLOWED_PLAN_EXT)}",
+            )
+        raw_bytes = await file.read()
+        try:
+            plan_text = extract_text(file.filename, raw_bytes).strip()
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
+        source_filename = file.filename
+
+    if not plan_text:
+        raise HTTPException(400, "Нужен текст плана или файл с текстом")
+
+    record = models.PlanCheck(
+        title=title.strip(),
+        language=language,
+        source_filename=source_filename,
+        input_text=plan_text,
+        status="done",
+    )
+    try:
+        result, raw, is_raw = check_plan(title.strip(), language, plan_text)
+        record.verdict = result.verdict
+        record.summary = result.summary
+        record.errors = [e.model_dump() for e in result.errors]
+        record.optimized_plan = result.optimized_plan
+        record.is_raw = is_raw
+        record.raw_response = raw
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Проверка плана: ошибка")
+        record.status = "error"
+        record.error_message = str(exc)[:2000]
+
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return record
+
+
+@app.get("/plans", response_model=List[PlanCheckListItem])
+def list_plans(db: Session = Depends(get_db)):
+    return (
+        db.query(models.PlanCheck)
+        .order_by(models.PlanCheck.created_at.desc())
+        .all()
+    )
+
+
+@app.get("/plans/{plan_id}", response_model=PlanCheckOut)
+def get_plan(plan_id: int, db: Session = Depends(get_db)):
+    record = db.get(models.PlanCheck, plan_id)
+    if record is None:
+        raise HTTPException(404, "Проверка не найдена")
+    return record
 
 
 @app.get("/health")
