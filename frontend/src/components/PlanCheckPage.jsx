@@ -3,10 +3,12 @@ import PlanForm from "./PlanForm.jsx";
 import PlanResult from "./PlanResult.jsx";
 import { getPlan, listPlans } from "../api.js";
 
+// Проверка плана синхронная и терминальная, поэтому точки статичные
+// (без «пульсации» dot--processing, которая означала бы «ещё обрабатывается»).
 const VERDICT_DOT = {
-  rework: "dot--error",
-  partial: "dot--processing",
-  approved: "dot--done",
+  rework: "pc-dot--red",
+  partial: "pc-dot--amber",
+  approved: "pc-dot--green",
 };
 
 export default function PlanCheckPage() {
@@ -59,7 +61,7 @@ export default function PlanCheckPage() {
                 onClick={() => openPlan(p.id)}
               >
                 <span
-                  className={`dot ${VERDICT_DOT[p.verdict] || "dot--pending"}`}
+                  className={`dot ${VERDICT_DOT[p.verdict] || "pc-dot--none"}`}
                 />
                 <span className="lessons__title">{p.title}</span>
                 <span className="lessons__status">{p.language}</span>

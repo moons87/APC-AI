@@ -81,3 +81,15 @@ def test_check_plan_requires_input(monkeypatch):
     resp = client.post("/plans/check", data={"title": "Пусто", "language": "ru"})
     assert resp.status_code == 400
     main.app.dependency_overrides.clear()
+
+
+def test_check_plan_rejects_oversize_file(monkeypatch):
+    client = _make_client(monkeypatch)
+    monkeypatch.setattr(main, "MAX_PLAN_UPLOAD_MB", 0)  # любой непустой файл превышает лимит
+    resp = client.post(
+        "/plans/check",
+        data={"title": "Большой", "language": "ru"},
+        files={"file": ("big.txt", io.BytesIO(b"x" * 10), "text/plain")},
+    )
+    assert resp.status_code == 413
+    main.app.dependency_overrides.clear()

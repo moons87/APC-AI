@@ -1169,6 +1169,12 @@ h1, h2, h3 {
 
 .pc-textarea { min-height: 180px; resize: vertical; line-height: 1.6; }
 
+/* Статичные точки вердикта в истории проверок (терминальные состояния). */
+.pc-dot--red   { background: #dc2626; }
+.pc-dot--amber { background: #d97706; }
+.pc-dot--green { background: #059669; }
+.pc-dot--none  { background: #a0aec0; }
+
 .pc-results { display: flex; flex-direction: column; gap: 16px; }
 .pc-card {
   background: #fff;

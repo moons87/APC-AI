@@ -55,6 +55,11 @@ logger = logging.getLogger(__name__)
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "/data/uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+# Жёсткий лимит размера файла учебного плана. В отличие от аудио, документ-план
+# мал, поэтому лимит низкий — это страхует от загрузки в память гигантских
+# .xlsx/.pdf (вплоть до zip-bomb) до их разбора.
+MAX_PLAN_UPLOAD_MB = int(os.getenv("MAX_PLAN_UPLOAD_MB", "25"))
+
 AUDIO_EXT = {".mp3", ".wav", ".m4a", ".ogg", ".flac"}
 VIDEO_EXT = {".mp4", ".mov", ".mkv", ".webm"}
 ALLOWED_EXT = AUDIO_EXT | VIDEO_EXT
@@ -267,6 +272,7 @@ async def check_plan_endpoint(
     source_filename = None
     plan_text = (text or "").strip()
 
+    # Если приложен файл — он имеет приоритет над вставленным текстом.
     if file is not None and file.filename:
         ext = os.path.splitext(file.filename)[1].lower()
         if ext not in ALLOWED_PLAN_EXT:
@@ -274,7 +280,12 @@ async def check_plan_endpoint(
                 400,
                 f"Неподдерживаемый формат: {ext}. Разрешено: {sorted(ALLOWED_PLAN_EXT)}",
             )
-        raw_bytes = await file.read()
+        # Читаем не больше лимита (cap+1, чтобы детектировать превышение),
+        # не загружая в память файлы произвольного размера.
+        cap = MAX_PLAN_UPLOAD_MB * 1024 * 1024
+        raw_bytes = await file.read(cap + 1)
+        if len(raw_bytes) > cap:
+            raise HTTPException(413, f"Файл больше лимита {MAX_PLAN_UPLOAD_MB} МБ")
         try:
             plan_text = extract_text(file.filename, raw_bytes).strip()
         except ValueError as exc:
