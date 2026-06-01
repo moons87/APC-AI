@@ -18,6 +18,10 @@ logger = logging.getLogger(__name__)
 
 MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6")
 MAX_PLAN_CHARS = int(os.getenv("MAX_PLAN_CHARS", "180000"))
+# Ответ объёмный: подробные ошибки + варианты замены + полный эталонный план,
+# да ещё на кириллице (~2-3 токена на символ). При низком лимите JSON обрывается
+# на полуслове и не парсится — поэтому потолок щедрый.
+MAX_OUTPUT_TOKENS = int(os.getenv("PLAN_MAX_OUTPUT_TOKENS", "16000"))
 
 _VERDICT_CODES = {
     "ҚАЙТА_ӨҢДЕУГЕ": "rework",
@@ -113,7 +117,7 @@ def check_plan(title: str, language: str, plan_text: str) -> tuple[LLMPlanCheck,
 
     response = _client().messages.create(
         model=MODEL,
-        max_tokens=4000,
+        max_tokens=MAX_OUTPUT_TOKENS,
         system=[
             {
                 "type": "text",
@@ -126,9 +130,10 @@ def check_plan(title: str, language: str, plan_text: str) -> tuple[LLMPlanCheck,
 
     raw_text = "".join(b.text for b in response.content if b.type == "text")
     logger.info(
-        "PlanCheck usage: in=%s out=%s cache_read=%s",
+        "PlanCheck usage: in=%s out=%s stop=%s cache_read=%s",
         response.usage.input_tokens,
         response.usage.output_tokens,
+        getattr(response, "stop_reason", None),
         getattr(response.usage, "cache_read_input_tokens", None),
     )
 
@@ -137,7 +142,16 @@ def check_plan(title: str, language: str, plan_text: str) -> tuple[LLMPlanCheck,
         result = LLMPlanCheck.model_validate(data)
         result.verdict = normalize_verdict(result.verdict)
         return result, raw_text, False
-    except Exception:  # noqa: BLE001 — любой сбой разбора → raw-фолбэк
+    except Exception as exc:  # noqa: BLE001 — любой сбой разбора → raw-фолбэк
+        # Не глушим причину: чаще всего это обрыв по max_tokens (stop_reason=
+        # max_tokens) → невалидный JSON. Логируем, чтобы фолбэк был диагностируем.
+        logger.warning(
+            "PlanCheck raw-фолбэк: %s (stop=%s, out_tokens=%s, len=%s)",
+            exc,
+            getattr(response, "stop_reason", None),
+            response.usage.output_tokens,
+            len(raw_text),
+        )
         fallback = LLMPlanCheck(
             verdict=None, summary=None, errors=[], optimized_plan=raw_text
         )
