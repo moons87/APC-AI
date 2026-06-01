@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import UploadForm from "./components/UploadForm.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import Landing from "./components/Landing.jsx";
+import PlanCheckPage from "./components/PlanCheckPage.jsx";
 import { getLesson, listLessons } from "./api.js";
 
 const STATUS_LABELS = {
@@ -64,7 +65,13 @@ export default function App() {
   };
 
   if (view === "landing") {
-    return <Landing onEnter={() => setView("app")} />;
+    return (
+      <Landing
+        onEnter={(target) =>
+          setView(typeof target === "string" ? target : "lesson")
+        }
+      />
+    );
   }
 
   return (
@@ -72,6 +79,46 @@ export default function App() {
       <button className="app__home" onClick={() => setView("landing")}>
         ← На главную
       </button>
+
+      <nav className="section-tabs">
+        <button
+          className={"section-tab" + (view === "lesson" ? " section-tab--active" : "")}
+          onClick={() => setView("lesson")}
+        >
+          🎧 Анализ урока
+        </button>
+        <button
+          className={"section-tab" + (view === "plans" ? " section-tab--active" : "")}
+          onClick={() => setView("plans")}
+        >
+          📋 Проверка плана
+        </button>
+      </nav>
+
+      {view === "plans" ? (
+        <PlanCheckPage />
+      ) : (
+        <LessonSection
+          lessons={lessons}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+          selectedLesson={selectedLesson}
+          handleUploaded={handleUploaded}
+        />
+      )}
+    </div>
+  );
+}
+
+function LessonSection({
+  lessons,
+  selectedId,
+  setSelectedId,
+  selectedLesson,
+  handleUploaded,
+}) {
+  return (
+    <>
       <header className="masthead">
         <span className="masthead__eyebrow">🎧 Анализ урока · ИИ</span>
         <h1 className="masthead__title">ИИ-наблюдатель урока</h1>
@@ -125,7 +172,7 @@ export default function App() {
           )}
         </main>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -76,8 +76,14 @@ export default function Landing({ onEnter }) {
             проведённого занятия по записи.
           </p>
           <div className="lp-cta lp-pop" style={{ "--d": "0.28s" }}>
-            <button className="lp-btn lp-btn--lg" onClick={onEnter}>
+            <button className="lp-btn lp-btn--lg" onClick={() => onEnter("lesson")}>
               Запустить <span className="lp-btn__arrow">→</span>
+            </button>
+            <button
+              className="lp-btn lp-btn--ghost lp-btn--lg"
+              onClick={() => onEnter("plans")}
+            >
+              📋 Проверка плана
             </button>
             <button className="lp-btn lp-btn--ghost lp-btn--lg" onClick={scrollTo("how")}>
               Как это работает
