@@ -29,7 +29,13 @@ def test_check_plan_parses_valid_json(monkeypatch):
         "verdict": "ІШІНАРА_ҚАБЫЛДАНСЫН",
         "summary": "Бар кемшіліктер бар.",
         "errors": [
-            {"type": "Блум қатесі", "description": "Пассив етістік", "example": "...баптау"}
+            {
+                "category": "bloom",
+                "type": "Блум қатесі",
+                "description": "Пассив етістік",
+                "example": "...баптау",
+                "suggestions": ["баптайды", "реттейді"],
+            }
         ],
         "optimized_plan": "Түзетілген нұсқа",
     }
@@ -41,6 +47,8 @@ def test_check_plan_parses_valid_json(monkeypatch):
     assert result.summary == "Бар кемшіліктер бар."
     assert len(result.errors) == 1
     assert result.errors[0].type == "Блум қатесі"
+    assert result.errors[0].category == "bloom"
+    assert result.errors[0].suggestions == ["баптайды", "реттейді"]
     assert result.optimized_plan == "Түзетілген нұсқа"
 
 

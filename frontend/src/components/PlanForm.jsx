@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { checkPlan } from "../api.js";
 
-export default function PlanForm({ onChecked }) {
+export default function PlanForm({ onChecked, onCheckStart, onError }) {
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("ru");
   const [text, setText] = useState("");
@@ -21,6 +21,7 @@ export default function PlanForm({ onChecked }) {
       return;
     }
     setBusy(true);
+    onCheckStart?.();
     try {
       const plan = await checkPlan({ title, language, text, file });
       onChecked(plan);
@@ -28,6 +29,7 @@ export default function PlanForm({ onChecked }) {
       setFile(null);
     } catch (err) {
       setError(err.message);
+      onError?.(err);
     } finally {
       setBusy(false);
     }

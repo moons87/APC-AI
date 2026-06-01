@@ -1198,57 +1198,123 @@ h1, h2, h3 {
 }
 .pc-card__tag--row { justify-content: space-between; }
 
-.pc-vc-red   { border-left: 4px solid #dc2626; }
-.pc-vc-amber { border-left: 4px solid #d97706; }
-.pc-vc-green { border-left: 4px solid #059669; }
-.pc-verdict { display: flex; gap: 18px; padding: 22px 24px; align-items: flex-start; }
-.pc-verdict__icon { font-size: 2.4rem; line-height: 1; }
-.pc-verdict__label { font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
-.pc-vc-red   .pc-verdict__label { color: #dc2626; }
-.pc-vc-amber .pc-verdict__label { color: #d97706; }
-.pc-vc-green .pc-verdict__label { color: #059669; }
-.pc-verdict__sum { font-size: 0.9rem; color: #4a5568; line-height: 1.6; }
-
-.pc-err-pill {
-  background: rgba(220,38,38,0.07);
-  color: #dc2626;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 2px 9px;
-  border-radius: 100px;
+/* ── Блок 1: Вердикт (крупный статус-бейдж) ── */
+.pc-verdict {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  border-left-width: 6px;
 }
-.pc-err-list { list-style: none; margin: 0; padding: 0; }
-.pc-err-item { padding: 16px 20px; border-bottom: 1px solid #e2e8f0; }
-.pc-err-item:last-child { border-bottom: none; }
-.pc-err-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.pc-err-n {
+.pc-verdict__icon { font-size: 2.6rem; line-height: 1; }
+.pc-verdict__text { display: flex; flex-direction: column; gap: 2px; }
+.pc-verdict__eyebrow {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #a0aec0;
+}
+.pc-verdict__label { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.01em; }
+.pcv--rework   { border-left-color: #dc2626; background: rgba(220,38,38,0.05); }
+.pcv--rework   .pc-verdict__label { color: #dc2626; }
+.pcv--partial  { border-left-color: #d97706; background: rgba(217,119,6,0.05); }
+.pcv--partial  .pc-verdict__label { color: #b45309; }
+.pcv--approved { border-left-color: #059669; background: rgba(5,150,105,0.05); }
+.pcv--approved .pc-verdict__label { color: #047857; }
+
+/* ── Блок 2: Сводка (alert) ── */
+.pc-alert {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: rgba(79,70,229,0.06);
+  border: 1px solid rgba(79,70,229,0.18);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.pc-alert__icon { font-size: 1.1rem; line-height: 1.5; }
+.pc-alert__text { font-size: 0.92rem; color: #3730a3; line-height: 1.6; margin: 0; }
+
+/* ── Блок 3: Ошибки (фильтр + карточки-аккордеоны) ── */
+.pc-errors { display: flex; flex-direction: column; gap: 12px; }
+.pc-errors__bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.pc-errors__title {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #a0aec0;
+}
+.pc-filter { display: flex; gap: 6px; flex-wrap: wrap; }
+.pc-chip {
+  border: 1px solid #e2e8f0; background: #fff;
+  border-radius: 100px; padding: 4px 12px;
+  font-size: 0.78rem; font-weight: 600; color: #4a5568;
+  cursor: pointer; transition: all 0.15s;
+}
+.pc-chip:hover { border-color: #c3cad6; }
+.pc-chip.is-active { background: #1a202c; border-color: #1a202c; color: #fff; }
+
+.pc-ecards { display: flex; flex-direction: column; gap: 10px; }
+.pc-ecard {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+  overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.pc-ecard__head {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: none; border: none;
+  cursor: pointer; text-align: left; font: inherit;
+}
+.pc-ecard__n {
+  flex: 0 0 auto;
   width: 22px; height: 22px;
   background: #e2e8f0; color: #4a5568;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.72rem; font-weight: 700;
 }
+.pc-ecard__chev { margin-left: auto; color: #a0aec0; font-size: 0.8rem; }
+.pc-ecard__body {
+  padding: 0 16px 16px 48px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.pc-ecard__desc { font-size: 0.9rem; color: #2d3748; line-height: 1.55; margin: 0; }
+
 .pc-badge {
   font-size: 0.72rem; font-weight: 700;
   padding: 3px 10px; border-radius: 100px;
 }
-.pc-b-amber  { background: rgba(217,119,6,0.07);  color: #d97706; }
-.pc-b-red    { background: rgba(220,38,38,0.07);  color: #dc2626; }
-.pc-b-coral  { background: rgba(234,88,12,0.07);  color: #ea580c; }
-.pc-b-purple { background: rgba(124,58,237,0.07); color: #7c3aed; }
-.pc-b-def    { background: #f7f9fc; color: #4a5568; }
-.pc-err-desc { font-size: 0.88rem; color: #4a5568; margin-bottom: 8px; line-height: 1.55; }
-.pc-ex-lbl {
-  font-size: 0.7rem; font-weight: 700; color: #a0aec0;
-  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
-}
-.pc-ex-text {
-  background: #f0f4f8;
+.pcb--amber  { background: rgba(217,119,6,0.10);  color: #b45309; }
+.pcb--red    { background: rgba(220,38,38,0.10);  color: #b91c1c; }
+.pcb--coral  { background: rgba(234,88,12,0.10);  color: #c2410c; }
+.pcb--purple { background: rgba(124,58,237,0.10); color: #6d28d9; }
+.pcb--def    { background: #edf1f7; color: #4a5568; }
+
+/* Цитата из РУП (контекст ошибки) */
+.pc-quote {
+  margin: 0;
+  background: #f7f9fc;
   border-left: 3px solid #667eea;
-  border-radius: 0 4px 4px 0;
-  padding: 8px 12px;
-  font-size: 0.85rem; color: #4a5568; font-style: italic; line-height: 1.5;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 0.86rem; color: #4a5568; font-style: italic; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word;
 }
+
+/* Quick Fix — чипы-подсказки замены */
+.pc-fixes { display: flex; flex-direction: column; gap: 6px; }
+.pc-fixes__lbl { font-size: 0.76rem; font-weight: 600; color: #718096; }
+.pc-fixes__row { display: flex; gap: 6px; flex-wrap: wrap; }
+.pc-fix {
+  border: 1px dashed #c7cddb; background: #fff;
+  border-radius: 8px; padding: 5px 12px;
+  font-size: 0.82rem; font-weight: 600; color: #4338ca;
+  cursor: pointer; transition: all 0.15s;
+}
+.pc-fix:hover { background: #eef2ff; border-color: #818cf8; }
+.pc-fix--ok {
+  color: #059669; border-color: #059669; border-style: solid;
+  background: rgba(5,150,105,0.07);
+}
+
 .pc-no-errs { padding: 26px; text-align: center; color: #059669; font-weight: 500; }
 
 .pc-copy {
@@ -1273,3 +1339,51 @@ h1, h2, h3 {
   overflow-y: auto;
   margin: 0;
 }
+
+/* ── Скелетон загрузки (имитация будущих зон) ── */
+@keyframes pc-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.pc-skel { pointer-events: none; }
+.pc-skel__verdict {
+  display: flex; align-items: center; gap: 18px;
+  padding: 20px 24px; border: 1px solid #e2e8f0; border-radius: 16px;
+}
+.pc-skel__col { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.pc-skel__alert {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 12px;
+}
+.pc-skel__card {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px; border: 1px solid #e2e8f0; border-radius: 12px;
+}
+.pc-skel__circle, .pc-skel__line, .pc-skel__chip, .pc-skel__quote {
+  background: #edf1f7;
+  background-image: linear-gradient(90deg, #edf1f7 0px, #f6f8fb 200px, #edf1f7 400px);
+  background-size: 800px 100%;
+  animation: pc-shimmer 1.3s infinite linear;
+  border-radius: 6px;
+}
+.pc-skel__circle { width: 46px; height: 46px; border-radius: 50%; flex: 0 0 auto; }
+.pc-skel__line { height: 12px; width: 100%; }
+.pc-skel__line--w30 { width: 30%; }
+.pc-skel__line--w60 { width: 60%; }
+.pc-skel__line--w70 { width: 70%; }
+.pc-skel__line--w80 { width: 80%; }
+.pc-skel__chip { height: 20px; width: 130px; border-radius: 100px; }
+.pc-skel__quote { height: 38px; width: 100%; border-radius: 8px; }
+
+/* ── Тонкий кастомный скроллбар правой панели результата ── */
+.content--scroll {
+  max-height: calc(100vh - 170px);
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #d2dae6 transparent;
+}
+.content--scroll::-webkit-scrollbar { width: 7px; }
+.content--scroll::-webkit-scrollbar-track { background: transparent; }
+.content--scroll::-webkit-scrollbar-thumb { background: #d2dae6; border-radius: 100px; }
+.content--scroll::-webkit-scrollbar-thumb:hover { background: #b6c0d0; }

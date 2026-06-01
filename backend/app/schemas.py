@@ -75,9 +75,13 @@ class LLMAnalysis(BaseModel):
 
 # --- Методист РУП: проверка учебного плана ---
 class PlanError(BaseModel):
+    # type — локализованная метка (на языке анализа), category — стабильный код
+    # для фильтрации и цвета бейджа, не зависящий от языка.
     type: str
+    category: Optional[str] = None  # duplicate | bloom | logic | passive | other
     description: str
     example: Optional[str] = None
+    suggestions: List[str] = []  # готовые варианты замены (чипы Quick Fix)
 
 
 class LLMPlanCheck(BaseModel):

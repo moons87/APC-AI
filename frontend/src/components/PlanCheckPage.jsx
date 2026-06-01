@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import PlanForm from "./PlanForm.jsx";
 import PlanResult from "./PlanResult.jsx";
+import SkeletonResult from "./SkeletonResult.jsx";
 import { getPlan, listPlans } from "../api.js";
 
 // Проверка плана синхронная и терминальная, поэтому точки статичные
@@ -14,6 +15,7 @@ const VERDICT_DOT = {
 export default function PlanCheckPage() {
   const [plans, setPlans] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -27,12 +29,22 @@ export default function PlanCheckPage() {
     refresh();
   }, [refresh]);
 
+  // Старт проверки: показываем скелетон вместо прошлого/пустого результата.
+  const handleCheckStart = () => {
+    setSelected(null);
+    setLoading(true);
+  };
+
   const handleChecked = (plan) => {
+    setLoading(false);
     setSelected(plan);
     refresh();
   };
 
+  const handleError = () => setLoading(false);
+
   const openPlan = async (id) => {
+    setLoading(false);
     try {
       setSelected(await getPlan(id));
     } catch (e) {
@@ -43,7 +55,11 @@ export default function PlanCheckPage() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <PlanForm onChecked={handleChecked} />
+        <PlanForm
+          onCheckStart={handleCheckStart}
+          onChecked={handleChecked}
+          onError={handleError}
+        />
 
         <div className="card">
           <h3 className="sidebar__heading">История проверок</h3>
@@ -71,8 +87,10 @@ export default function PlanCheckPage() {
         </div>
       </aside>
 
-      <main className="content">
-        {selected ? (
+      <main className="content content--scroll">
+        {loading ? (
+          <SkeletonResult />
+        ) : selected ? (
           <PlanResult plan={selected} lang={selected.language} />
         ) : (
           <div className="state">
