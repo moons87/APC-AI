@@ -3,6 +3,7 @@ import datetime
 
 from sqlalchemy import (
     JSON,
+    Boolean,
     Column,
     DateTime,
     Float,
@@ -74,3 +75,30 @@ class AnalysisResult(Base):
     raw_response = Column(Text, nullable=True)  # сырой ответ модели для отладки
 
     lesson = relationship("Lesson", back_populates="result")
+
+
+class PlanCheck(Base):
+    """Результат проверки учебного плана (Методист РУП).
+
+    status: done | error. Обработка синхронная, поэтому pending/processing нет.
+    """
+
+    __tablename__ = "plan_checks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(512), nullable=False)
+    language = Column(String(8), default="ru", nullable=False)  # kk | ru
+    source_filename = Column(String(1024), nullable=True)
+    input_text = Column(Text, nullable=False)
+
+    status = Column(String(16), default="done", nullable=False, index=True)
+    error_message = Column(Text, nullable=True)
+
+    verdict = Column(String(32), nullable=True)        # rework | partial | approved
+    summary = Column(Text, nullable=True)
+    errors = Column(JSON, default=list, nullable=False)  # list[{type, description, example}]
+    optimized_plan = Column(Text, nullable=True)
+    is_raw = Column(Boolean, default=False, nullable=False)
+    raw_response = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)

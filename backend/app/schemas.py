@@ -71,3 +71,45 @@ class LLMAnalysis(BaseModel):
     missing_concepts: List[str] = []
     structure_present: StructurePresent = StructurePresent()
     recommendations: List[str] = []
+
+
+# --- Методист РУП: проверка учебного плана ---
+class PlanError(BaseModel):
+    type: str
+    description: str
+    example: Optional[str] = None
+
+
+class LLMPlanCheck(BaseModel):
+    """Схема ответа Claude по проверке плана (валидация перед сохранением)."""
+
+    verdict: Optional[str] = None
+    summary: Optional[str] = None
+    errors: List[PlanError] = []
+    optimized_plan: Optional[str] = None
+
+
+class PlanCheckListItem(BaseModel):
+    """Краткая карточка для истории (GET /plans)."""
+
+    id: int
+    title: str
+    language: str
+    verdict: Optional[str] = None
+    status: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class PlanCheckOut(PlanCheckListItem):
+    """Полный результат проверки (GET /plans/{id}, POST /plans/check)."""
+
+    source_filename: Optional[str] = None
+    summary: Optional[str] = None
+    errors: List[PlanError] = []
+    optimized_plan: Optional[str] = None
+    is_raw: bool = False
+    error_message: Optional[str] = None
+
+    model_config = {"from_attributes": True}
