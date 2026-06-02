@@ -39,11 +39,13 @@ from .analysis import analyze_transcript
 from .database import SessionLocal, get_db, init_db
 from .doc_extract import ALLOWED_PLAN_EXT, extract_text
 from .plan_check import check_plan
+from .plan_extract import extract_plan_fields
 from .schemas import (
     LessonDetail,
     LessonSummary,
     PlanCheckListItem,
     PlanCheckOut,
+    PlanExtractOut,
     UploadResponse,
 )
 from .transcription import relabel_transcript, transcribe_and_diarize
@@ -253,6 +255,50 @@ def get_lesson(lesson_id: int, db: Session = Depends(get_db)):
     if lesson is None:
         raise HTTPException(404, "Урок не найден")
     return lesson
+
+
+@app.post("/lessons/plan-extract", response_model=PlanExtractOut)
+async def extract_plan_for_lesson(
+    language: str = Form("ru"),
+    text: str = Form(""),
+    file: UploadFile | None = File(None),
+):
+    """Разбирает план урока (файл ИЛИ текст) и возвращает тему + ключевые понятия.
+
+    Вспомогательный синхронный разбор для предзаполнения формы загрузки урока.
+    Запись в БД не создаётся. Файл (если приложен) имеет приоритет над текстом.
+    """
+    if language not in {"kk", "ru"}:
+        raise HTTPException(400, "language должен быть 'kk' или 'ru'")
+
+    plan_text = (text or "").strip()
+
+    if file is not None and file.filename:
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in ALLOWED_PLAN_EXT:
+            raise HTTPException(
+                400,
+                f"Неподдерживаемый формат: {ext}. Разрешено: {sorted(ALLOWED_PLAN_EXT)}",
+            )
+        cap = MAX_PLAN_UPLOAD_MB * 1024 * 1024
+        raw_bytes = await file.read(cap + 1)
+        if len(raw_bytes) > cap:
+            raise HTTPException(413, f"Файл больше лимита {MAX_PLAN_UPLOAD_MB} МБ")
+        try:
+            plan_text = extract_text(file.filename, raw_bytes).strip()
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
+
+    if not plan_text:
+        raise HTTPException(400, "Нужен текст плана или файл с текстом")
+
+    try:
+        result, _raw = extract_plan_fields(plan_text, language)
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Разбор плана: ошибка")
+        raise HTTPException(502, f"Не удалось разобрать план: {exc}")
+
+    return PlanExtractOut(title=result.title, key_concepts=result.key_concepts)
 
 
 # --------------------------------------------------------------------------- #
