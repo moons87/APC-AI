@@ -1,34 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 
+// Темы занятий — крутятся в поле «Запись урока» героя.
 const TOPICS = [
   "Квадратные уравнения",
   "Фотосинтез растений",
   "Закон Ома",
   "Творчество Абая",
-  "Архитектура компьютера",
+  "Сварка металлов",
 ];
 
+// Что система выдаёт по записи урока (результат анализа).
+const OUTPUTS = [
+  { icon: "🗣️", t: "Баланс речи" },
+  { icon: "❓", t: "Типы вопросов" },
+  { icon: "🧩", t: "Структура" },
+  { icon: "💡", t: "Рекомендации" },
+];
+
+// Как работает анализ урока — основной поток.
 const STEPS = [
-  { n: "01", icon: "📝", t: "Тема", d: "Вы вводите только тему занятия — больше ничего." },
-  { n: "02", icon: "🗂️", t: "План урока", d: "Claude строит план по шаблону вашего колледжа." },
-  { n: "03", icon: "🔎", t: "Источники", d: "Подбор и структурирование материалов по теме." },
-  { n: "04", icon: "🎞️", t: "Презентация", d: "Готовый слайд-дек, собранный по плану." },
-  { n: "05", icon: "🎬", t: "Видео", d: "Обучающее видео с озвучкой на основе материала." },
-  { n: "06", icon: "🎧", t: "Подкаст", d: "Аудиоверсия урока в формате живого диалога." },
+  { n: "01", icon: "📤", t: "Загрузка", d: "Аудио или видео занятия. Можно приложить план — поля заполнятся сами." },
+  { n: "02", icon: "🗣️", t: "Расшифровка", d: "Речь распознаётся, реплики размечаются по говорящим." },
+  { n: "03", icon: "🧠", t: "Анализ", d: "Claude оценивает баланс речи, вопросы, покрытие плана и структуру." },
+  { n: "04", icon: "✅", t: "Рекомендации", d: "Готовый отчёт с конкретными советами преподавателю." },
 ];
 
 const FEATURES = [
-  { icon: "⚡", t: "10 минут вместо часов", d: "Полный комплект материалов к уроку — из одной темы." },
-  { icon: "🎓", t: "Шаблон вашего колледжа", d: "План оформляется по принятой в учреждении структуре." },
-  { icon: "🧩", t: "Единый поток", d: "План, слайды, видео и подкаст согласованы между собой." },
-  { icon: "📊", t: "Анализ проведённого урока", d: "Загрузите запись — оценим баланс речи, вопросы, структуру." },
-];
-
-const OUTPUTS = [
-  { icon: "🗂️", t: "План урока" },
-  { icon: "🎞️", t: "Презентация" },
-  { icon: "🎬", t: "Видео" },
-  { icon: "🎧", t: "Подкаст" },
+  { icon: "📊", t: "Анализ записи урока", d: "Баланс речи, типы вопросов, структура занятия и рекомендации — по аудио или видео." },
+  { icon: "📋", t: "Проверка плана по стандартам", d: "РУП/ОӘЖ/КТЖ на ошибки Блума, дубликаты и логику — вердикт и исправленный вариант." },
+  { icon: "🗂️", t: "Анализ по вашему плану", d: "Приложите план урока — система извлечёт тему и понятия и сверит запись с ними." },
+  { icon: "🌐", t: "Русский и қазақша", d: "Обе языковые версии: распознавание речи и анализ на двух языках." },
 ];
 
 export default function Landing({ onEnter }) {
@@ -49,13 +50,13 @@ export default function Landing({ onEnter }) {
       {/* Навигация */}
       <nav className="lp-nav">
         <div className="lp-logo">
-          <span className="lp-logo__mark">🎧</span>
-          <span className="lp-logo__text">Урок<span className="lp-logo__accent">·</span>Фабрика</span>
+          <span className="lp-logo__mark">🎓</span>
+          <span className="lp-logo__text">Урок<span className="lp-logo__accent">·</span>ИИ</span>
         </div>
         <div className="lp-nav__links">
+          <button className="lp-link" onClick={scrollTo("tools")}>Инструменты</button>
           <button className="lp-link" onClick={scrollTo("how")}>Как это работает</button>
-          <button className="lp-link" onClick={scrollTo("features")}>Возможности</button>
-          <button className="lp-btn lp-btn--sm" onClick={onEnter}>Запустить</button>
+          <button className="lp-btn lp-btn--sm" onClick={() => onEnter("lesson")}>Запустить</button>
         </div>
       </nav>
 
@@ -63,21 +64,21 @@ export default function Landing({ onEnter }) {
       <header className="lp-hero">
         <div className="lp-hero__copy">
           <span className="lp-eyebrow lp-pop" style={{ "--d": "0.05s" }}>
-            ✦ Платформа ИИ для преподавателя
+            ✦ Платформа ИИ для преподавателя и методиста
           </span>
           <h1 className="lp-title lp-pop" style={{ "--d": "0.12s" }}>
-            Целый урок —
+            Анализ урока и
             <br />
-            из одной <span className="lp-title__grad">темы</span>
+            проверка <span className="lp-title__grad">плана</span>
           </h1>
           <p className="lp-lead lp-pop" style={{ "--d": "0.2s" }}>
-            Введите тему — и за 10 минут получите <b>план</b>, <b>презентацию</b>,
-            <b> обучающее видео</b> и <b>аудиоподкаст</b>. Плюс анализ качества
-            проведённого занятия по записи.
+            Загрузите запись занятия — получите <b>баланс речи</b>, <b>типы вопросов</b>,
+            <b> структуру</b> и <b>рекомендации</b>. А учебный план Claude проверит на
+            ошибки <b>Блума</b>, дубликаты и логику — с вердиктом и исправленным вариантом.
           </p>
           <div className="lp-cta lp-pop" style={{ "--d": "0.28s" }}>
             <button className="lp-btn lp-btn--lg" onClick={() => onEnter("lesson")}>
-              Запустить <span className="lp-btn__arrow">→</span>
+              🎧 Анализ урока <span className="lp-btn__arrow">→</span>
             </button>
             <button
               className="lp-btn lp-btn--ghost lp-btn--lg"
@@ -85,22 +86,19 @@ export default function Landing({ onEnter }) {
             >
               📋 Проверка плана
             </button>
-            <button className="lp-btn lp-btn--ghost lp-btn--lg" onClick={scrollTo("how")}>
-              Как это работает
-            </button>
           </div>
 
           <div className="lp-stats lp-pop" style={{ "--d": "0.36s" }}>
-            <Stat to={10} suffix=" мин" label="на полный урок" />
-            <Stat to={4} suffix="" label="готовых артефакта" />
-            <Stat to={1} suffix="" label="тема на входе" />
+            <Stat to={2} suffix="" label="рабочих модуля" />
+            <Stat to={5} suffix="" label="метрик по уроку" />
+            <Stat to={2} suffix="" label="языка: рус и қаз" />
           </div>
         </div>
 
-        {/* Визуальная сцена «тема → артефакты» */}
+        {/* Визуальная сцена «запись → метрики анализа» */}
         <div className="lp-stage lp-pop" style={{ "--d": "0.22s" }}>
           <div className="lp-input">
-            <span className="lp-input__label">Тема урока</span>
+            <span className="lp-input__label">Запись урока</span>
             <div className="lp-input__field">
               <Typewriter words={TOPICS} />
             </div>
@@ -130,62 +128,24 @@ export default function Landing({ onEnter }) {
         </div>
       </header>
 
-      {/* Пайплайн */}
-      <section className="lp-section" id="how">
+      {/* Два инструмента */}
+      <section className="lp-section" id="tools">
         <div className="lp-head reveal">
-          <span className="lp-kicker">Как это работает</span>
-          <h2 className="lp-h2">Шесть шагов от темы до готового урока</h2>
+          <span className="lp-kicker">Инструменты</span>
+          <h2 className="lp-h2">Два инструмента в одной платформе</h2>
         </div>
-        <ol className="lp-pipe">
-          {STEPS.map((s, i) => (
-            <li
-              className="lp-step reveal"
-              key={s.n}
-              style={{ transitionDelay: `${i * 0.07}s` }}
-            >
-              <span className="lp-step__num">{s.n}</span>
-              <span className="lp-step__icon">{s.icon}</span>
-              <h3 className="lp-step__t">{s.t}</h3>
-              <p className="lp-step__d">{s.d}</p>
-              {i < STEPS.length - 1 && <span className="lp-step__arrow" aria-hidden="true">→</span>}
-            </li>
-          ))}
-        </ol>
-      </section>
 
-      {/* Возможности */}
-      <section className="lp-section" id="features">
-        <div className="lp-head reveal">
-          <span className="lp-kicker">Возможности</span>
-          <h2 className="lp-h2">Почему это экономит часы работы</h2>
-        </div>
-        <div className="lp-features">
-          {FEATURES.map((f, i) => (
-            <article
-              className="lp-feature reveal"
-              key={f.t}
-              style={{ transitionDelay: `${i * 0.08}s` }}
-            >
-              <span className="lp-feature__icon">{f.icon}</span>
-              <h3 className="lp-feature__t">{f.t}</h3>
-              <p className="lp-feature__d">{f.d}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Модуль анализа */}
-      <section className="lp-section">
+        {/* Модуль 1 — анализ урока */}
         <div className="lp-band reveal">
           <div className="lp-band__copy">
-            <span className="lp-kicker">Уже работает</span>
-            <h2 className="lp-h2">Анализ проведённого урока</h2>
+            <span className="lp-kicker">🎧 Анализ урока</span>
+            <h2 className="lp-h2">Что происходило на занятии</h2>
             <p className="lp-band__text">
-              Загрузите аудио- или видеозапись занятия — система оценит баланс речи
-              преподавателя и студентов, типы вопросов, покрытие плана и структуру
-              урока, и даст конкретные рекомендации.
+              Загрузите аудио- или видеозапись — система распознает речь, разметит
+              говорящих и оценит баланс речи преподавателя и студентов, типы вопросов,
+              покрытие плана и структуру урока, а затем даст конкретные рекомендации.
             </p>
-            <button className="lp-btn lp-btn--lg" onClick={onEnter}>
+            <button className="lp-btn lp-btn--lg" onClick={() => onEnter("lesson")}>
               Открыть анализатор <span className="lp-btn__arrow">→</span>
             </button>
           </div>
@@ -211,22 +171,115 @@ export default function Landing({ onEnter }) {
             </div>
           </div>
         </div>
+
+        {/* Модуль 2 — проверка плана */}
+        <div className="lp-band reveal">
+          <div className="lp-band__copy">
+            <span className="lp-kicker">📋 Методист РУП</span>
+            <h2 className="lp-h2">Проверка учебного плана</h2>
+            <p className="lp-band__text">
+              Вставьте текст или приложите файл плана (docx, pdf, xlsx, txt). Claude
+              в роли главного методиста проверит его на пассивные формулировки целей
+              (таксономия Блума), дубликаты тем и нарушения педагогической логики —
+              и вернёт вердикт, разбор ошибок и эталонный исправленный план.
+            </p>
+            <button
+              className="lp-btn lp-btn--ghost lp-btn--lg"
+              onClick={() => onEnter("plans")}
+            >
+              Проверить план <span className="lp-btn__arrow">→</span>
+            </button>
+          </div>
+          <div className="lp-band__viz" aria-hidden="true">
+            <div className="lp-mini lp-mini--wide">
+              <div className="lp-mini__lbl">Вердикт</div>
+              <div className="lp-mini__chips">
+                <span className="is-off">Доработать</span>
+              </div>
+            </div>
+            <div className="lp-mini">
+              <div className="lp-mini__val">3</div>
+              <div className="lp-mini__lbl">найдено ошибок</div>
+              <span className="lp-mini__bar"><i style={{ width: "45%" }} /></span>
+            </div>
+            <div className="lp-mini lp-mini--wide">
+              <div className="lp-mini__lbl">Категории</div>
+              <div className="lp-mini__chips">
+                <span>Блум</span>
+                <span>Дубликаты</span>
+                <span>Логика</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Пайплайн */}
+      <section className="lp-section" id="how">
+        <div className="lp-head reveal">
+          <span className="lp-kicker">Как это работает</span>
+          <h2 className="lp-h2">От записи урока до рекомендаций</h2>
+        </div>
+        <ol className="lp-pipe">
+          {STEPS.map((s, i) => (
+            <li
+              className="lp-step reveal"
+              key={s.n}
+              style={{ transitionDelay: `${i * 0.07}s` }}
+            >
+              <span className="lp-step__num">{s.n}</span>
+              <span className="lp-step__icon">{s.icon}</span>
+              <h3 className="lp-step__t">{s.t}</h3>
+              <p className="lp-step__d">{s.d}</p>
+              {i < STEPS.length - 1 && <span className="lp-step__arrow" aria-hidden="true">→</span>}
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* Возможности */}
+      <section className="lp-section" id="features">
+        <div className="lp-head reveal">
+          <span className="lp-kicker">Возможности</span>
+          <h2 className="lp-h2">Что вы получаете</h2>
+        </div>
+        <div className="lp-features">
+          {FEATURES.map((f, i) => (
+            <article
+              className="lp-feature reveal"
+              key={f.t}
+              style={{ transitionDelay: `${i * 0.08}s` }}
+            >
+              <span className="lp-feature__icon">{f.icon}</span>
+              <h3 className="lp-feature__t">{f.t}</h3>
+              <p className="lp-feature__d">{f.d}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       {/* Финальный CTA */}
       <section className="lp-section">
         <div className="lp-final reveal">
-          <h2 className="lp-final__t">Соберите первый урок за 10 минут</h2>
-          <p className="lp-final__d">Одна тема на входе — комплект материалов на выходе.</p>
-          <button className="lp-btn lp-btn--xl" onClick={onEnter}>
-            Запустить платформу <span className="lp-btn__arrow">→</span>
-          </button>
+          <h2 className="lp-final__t">Загрузите запись или план — и начните</h2>
+          <p className="lp-final__d">Два инструмента ИИ для преподавателя и методиста.</p>
+          <div className="lp-cta">
+            <button className="lp-btn lp-btn--xl" onClick={() => onEnter("lesson")}>
+              🎧 Анализ урока <span className="lp-btn__arrow">→</span>
+            </button>
+            <button
+              className="lp-btn lp-btn--ghost lp-btn--xl"
+              onClick={() => onEnter("plans")}
+            >
+              📋 Проверка плана
+            </button>
+          </div>
         </div>
       </section>
 
       <footer className="lp-footer">
-        <span>🎧 Урок·Фабрика</span>
-        <span className="lp-footer__muted">ИИ-ассистент преподавателя · {new Date().getFullYear()}</span>
+        <span>🎓 Урок·ИИ</span>
+        <span className="lp-footer__muted">ИИ-ассистент преподавателя и методиста · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );
