@@ -19,6 +19,23 @@ export async function uploadLesson({ title, language, keyConcepts, file }) {
   return res.json(); // { lesson_id, status }
 }
 
+export async function extractPlanFields({ file, text, language }) {
+  const form = new FormData();
+  form.append("language", language);
+  if (text) form.append("text", text);
+  if (file) form.append("file", file);
+
+  const res = await fetch(`${API_URL}/lessons/plan-extract`, {
+    method: "POST",
+    body: form,
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Не удалось разобрать план: ${res.status} ${body}`);
+  }
+  return res.json(); // { title, key_concepts }
+}
+
 export async function getLesson(id) {
   const res = await fetch(`${API_URL}/lessons/${id}`);
   if (!res.ok) throw new Error(`Не удалось получить урок ${id}`);
