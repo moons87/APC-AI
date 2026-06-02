@@ -117,3 +117,18 @@ class PlanCheckOut(PlanCheckListItem):
     error_message: Optional[str] = None
 
     model_config = {"from_attributes": True}
+
+
+# --- Автозаполнение полей урока из плана ---
+class LLMPlanExtract(BaseModel):
+    """Схема ответа Claude при извлечении полей из плана урока."""
+
+    title: str = ""
+    key_concepts: List[str] = []
+
+
+class PlanExtractOut(BaseModel):
+    """Ответ POST /lessons/plan-extract — подставляется в форму загрузки урока."""
+
+    title: str = ""
+    key_concepts: List[str] = []
