@@ -23,6 +23,7 @@ hf_cache/
 .agents/
 skills-lock.json
 docs/superpowers/
+tools/
 
 # Видео: hyperframes-проекты и выходные рендеры
 videos/
