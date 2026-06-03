@@ -17,3 +17,13 @@ frontend/.vite/
 *.wav
 *.m4a
 hf_cache/
+
+# Локальное окружение агента (не часть приложения)
+.claude/
+.agents/
+skills-lock.json
+
+# Видео: hyperframes-проекты и выходные рендеры
+videos/
+video_out/
+video_out;C/
