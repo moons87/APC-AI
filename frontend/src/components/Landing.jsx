@@ -51,7 +51,7 @@ export default function Landing({ onEnter }) {
       <nav className="lp-nav">
         <div className="lp-logo">
           <span className="lp-logo__mark">🎓</span>
-          <span className="lp-logo__text">Урок<span className="lp-logo__accent">·</span>ИИ</span>
+          <span className="lp-logo__text">APC <span className="lp-logo__accent">AI</span></span>
         </div>
         <div className="lp-nav__links">
           <button className="lp-link" onClick={scrollTo("tools")}>Инструменты</button>
@@ -278,7 +278,7 @@ export default function Landing({ onEnter }) {
       </section>
 
       <footer className="lp-footer">
-        <span>🎓 Урок·ИИ</span>
+        <span>🎓 APC AI</span>
         <span className="lp-footer__muted">ИИ-ассистент преподавателя и методиста · {new Date().getFullYear()}</span>
       </footer>
     </div>
